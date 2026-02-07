@@ -1,0 +1,64 @@
+- Phân quyền
++ Admin
++ Teacher
++ Student
+
+- Chức năng
++ Admin
+    - Dashboard
+        + Hiển thị tổng các giáo viên/ Học sinh/ Số lớp
+    - Trang hiển thị các lớp học
+        + Thêm/xóa/sửa lớp học - trang thông tin chi tiết khóa học bao gồm (Tên lớp,giáo viên đứng lớp, danh sách học sinh)
+    - Trang danh sách giáo viên
+        + Danh sách giáo viên
+        + Chức năng thêm/xóa sửa
+    - Trang chi tiết giáo viên
+        + Thông tin giáo viên (Email,SĐT, Avatar)
+        + Số học sinh đang theo học
+        + Hiển thị danh sách các lớp giáo viên đang đảm nhiệm
+    - Trang danh sách học sinh
+        + Danh sách học sinh bao gồm (ID, tên, Lớp)
+        + Chức năng thêm xóa sửa, đổi Lớp
+        + toggle hiển thị chi tiết thông tin học sinh
+    - Phân quyền
+        + Thêm xóa sửa tất cả các chức năng cho role Teacher và Student (có thể tùy chỉnh cho từng Teacher hoặc student)
+
++ Teacher 
+- Trang Dashboard
+    + Hiển thị tổng số lượng học sinh
+    + Hiển thị tổng số lượng lớp
+    + Hiển thị chi tiết tất cả các lớp đang đảm nhiệm (Số thứ tự,Tên lớp, tổng số học sinh, ngày khai giảng, ngày kết thúc)
+- Trang Khóa học 
+    + Thêm/ xóa/ sửa khóa học (có mô tả khóa học)
+    + Tài liệu khóa học theo buổi bao gồm (từ vựng, bài tập,...)
+- Trang lớp học 
+    + Hiển thị thông tin các lớp học đã có (xem số buổi đã hoàn thành)
+    + Thêm lớp học bao gồm (Thêm học sinh,Thêm Khóa học)
+- Trang học sinh 
+    + Danh sách học sinh (bao gồm xem/xóa/ sửa)
+    + Xem các thông tin khóa học/ lớp học (đã tham gia/ đang học)/ bài tập học sinh đã làm
+    + Bộ lọc (theo Lớp)
+
++ Chức năng chấm tay writing
+
++ Student
++ Hiển thị khóa học (nếu có)
++ Xem thông tin khóa học
++ Chấm bài writing 1,2
++ Sửa bài writing AI
++ Xuất PDF/Word/Excel bài đã sửa/ từ vựng
++ Chức năng học từ vựng
+    - Trang reading
+        + Hiển thị danh sách bài reading bao gồm (tên bài, số lượng làm, image, loại câu hỏi) - ghi chú mỗi hàng chỉ tầm 5 bài reading
+        + Hiển thị bộ lọc bao gồm (dạng bài theo passage1,2,3 hoặc theo nguồn, hoặc theo dạng câu hỏi)
+        + Hiển thị khu vực bình luận
+    - Trang làm bài reading: bên phải hiển thị đoạn văn, bên trái hiển thị câu hỏi, phía trên hiển thị thời gian
+        + Hiển thị nút nộp bài
+        + Hiển thị số thứ tự câu hỏi
+        + Hiển thị nút thiết lập bao gồm (kích cỡ chữ)
+        + Hiển thị các công cụ hỗ trợ như note, nút hightlight, hoặc tra từ vựng
+    - Trang làm bài listening: hiển thị các dạng câu hỏi, bên dưới hiển thị audio có điều chỉnh âm lượng, tốc độ, tua ngược 5s, tua xuôi 5s
+        + Hiển thị các công cụ hỗ trợ như note, nút hightlight, hoặc tra từ vựng
+
+
+
