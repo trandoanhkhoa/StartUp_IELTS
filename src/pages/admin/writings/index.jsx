@@ -36,6 +36,8 @@ export default function AdminWritingList() {
   const [search, setSearch] = useState("");
   const [taskFilter, setTaskFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sourceFilter, setSourceFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
 
   //filter page
   const [page, setPage] = useState(1);
@@ -90,14 +92,40 @@ export default function AdminWritingList() {
       loadData(); // reload danh sách
     },
   });
+
+  const task1Types = [
+    "Line Chart",
+    "Bar Chart",
+    "Map",
+    "Process",
+    "Mixed Chart",
+    "Table",
+  ];
+
+  const task2Types = [
+    "Agree or Disagree",
+    "Discussion",
+    "Advantages and Disadvantages",
+    "Causes Problems and Solutions",
+    "Part Question",
+  ];
+
+  const typeOptions =
+    taskFilter === "Task 1"
+      ? task1Types
+      : taskFilter === "Task 2"
+        ? task2Types
+        : [];
   const loadData = async () => {
     try {
       setLoading(true);
-
       const res = await adminApi.getWritings({
         page,
         pageSize,
         includeHidden: statusFilter === "all",
+        taskType: taskFilter === "all" ? undefined : taskFilter,
+        type: typeFilter === "all" ? undefined : typeFilter,
+        source: sourceFilter === "all" ? undefined : sourceFilter,
       });
 
       setRows(res.data.items || []);
@@ -133,19 +161,23 @@ export default function AdminWritingList() {
     }
   };
   // ===== FILTER LOGIC =====
-  const filteredRows = rows.filter((r) => {
-    const matchSearch = r.question
+  const filteredRows = rows.filter((row) => {
+    const matchSearch = row.question
       ?.toLowerCase()
       .includes(search.toLowerCase());
 
-    const matchTask = taskFilter === "all" || r.taskType === taskFilter;
+    const matchTask = taskFilter === "all" || row.taskType === taskFilter;
+
+    const matchType = typeFilter === "all" || row.type === typeFilter;
+
+    const matchSource = sourceFilter === "all" || row.source === sourceFilter;
 
     const matchStatus =
       statusFilter === "all" ||
-      (statusFilter === "visible" && !r.hide) ||
-      (statusFilter === "hidden" && r.hide);
+      (statusFilter === "visible" && !row.hide) ||
+      (statusFilter === "hidden" && row.hide);
 
-    return matchSearch && matchTask && matchStatus;
+    return matchSearch && matchTask && matchType && matchSource && matchStatus;
   });
 
   return (
@@ -205,20 +237,25 @@ export default function AdminWritingList() {
               direction={{ xs: "column", md: "row" }}
               spacing={1.5}
               alignItems="center"
+              flexWrap="wrap"
             >
               <TextField
                 size="small"
                 placeholder="Search question…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                sx={{ minWidth: 240 }}
+                sx={{ minWidth: 220 }}
               />
 
+              {/* Task Filter */}
               <TextField
                 select
                 size="small"
                 value={taskFilter}
-                onChange={(e) => setTaskFilter(e.target.value)}
+                onChange={(e) => {
+                  setTaskFilter(e.target.value);
+                  setTypeFilter("all"); // reset type khi đổi task
+                }}
                 sx={{ minWidth: 140 }}
               >
                 <MenuItem value="all">All tasks</MenuItem>
@@ -226,6 +263,37 @@ export default function AdminWritingList() {
                 <MenuItem value="Task 2">Task 2</MenuItem>
               </TextField>
 
+              {/* Type Filter (dynamic) */}
+              <TextField
+                select
+                size="small"
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                sx={{ minWidth: 220 }}
+                disabled={taskFilter === "all"}
+              >
+                <MenuItem value="all">All types</MenuItem>
+                {typeOptions.map((type) => (
+                  <MenuItem key={type} value={type}>
+                    {type}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              {/* Source Filter */}
+              <TextField
+                select
+                size="small"
+                value={sourceFilter}
+                onChange={(e) => setSourceFilter(e.target.value)}
+                sx={{ minWidth: 180 }}
+              >
+                <MenuItem value="all">All sources</MenuItem>
+                <MenuItem value="Cambridge">Cambridge</MenuItem>
+                <MenuItem value="IELTS Collection">IELTS Collection</MenuItem>
+              </TextField>
+
+              {/* Status Filter */}
               <TextField
                 select
                 size="small"

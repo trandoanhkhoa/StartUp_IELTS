@@ -3,6 +3,7 @@ import Register from "@/pages/general/register.jsx";
 import Home from "@/pages/general/index.jsx";
 import Reading from "@/pages/general/reading.jsx";
 import Listening from "@/pages/general/listening.jsx";
+import Writing from "@/pages/general/writing.jsx";
 import ReadingTest from "@/pages/general/readingtest.jsx";
 import ListeningTest from "@/pages/general/listeningtest.jsx";
 import TypeofTest from "@/pages/general/typeoftest.jsx";
@@ -12,8 +13,7 @@ import TeacherLayout from "@/components/Layout/TeacherLayout.jsx";
 import AdminLayout from "@/components/Layout/AdminLayout.jsx";
 
 import StudentDashboard from "@/pages/student/index.jsx";
-import Task1 from "@/pages/student/Task1.jsx";
-import Task2 from "@/pages/student/Task2.jsx";
+import WritingTest from "@/pages/student/writingtest.jsx";
 import History from "@/pages/student/history.jsx";
 import Vocabulary from "@/pages/student/vocabulary.jsx";
 
@@ -38,6 +38,7 @@ export const publicRoutes = [
   { path: "/register", component: Register, layout: null },
   { path: "/reading", component: Reading, layout: Layout },
   { path: "/listening", component: Listening, layout: Layout },
+  { path: "/writing", component: Writing, layout: Layout },
   { path: "/type-of-test", component: TypeofTest, layout: null },
   { path: "/admin-writing", component: AdminWriting, layout: AdminLayout },
   {
@@ -83,8 +84,8 @@ export const privateRoutes = [
     layout: AdminLayout,
   },
   { path: "/dashboard", component: StudentDashboard, layout: Layout },
-  { path: "/task1", component: Task1, layout: Layout },
-  { path: "/task2", component: Task2, layout: Layout },
+  { path: "/writingtest/:id", component: WritingTest, layout: null },
+  { path: "/writingtest", component: WritingTest, layout: null },
   { path: "/history", component: History, layout: Layout },
   { path: "/vocabulary", component: Vocabulary, layout: Layout },
 ];

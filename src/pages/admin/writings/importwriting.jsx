@@ -35,16 +35,23 @@ export default function AdminImportWritingOverlay({
     const parsed = json.map((row, idx) => {
       const taskType = String(row.Task ?? "").trim();
       const question = String(row.Question ?? "").trim();
+      const type = String(row.Type ?? "").trim();
+      const source = String(row.Source ?? "").trim();
+      const title = String(row.Title ?? "").trim();
+      const category = String(row.Category ?? "").trim();
       const status = String(row.Status ?? "").toLowerCase();
 
       const valid =
         (taskType === "Task 1" || taskType === "Task 2") && !!question;
-
       return {
         id: idx,
         taskType,
         imageUrl: row.imageUrl ?? "",
         question,
+        type,
+        title,
+        source,
+        category,
         hide: status === "true",
         selected: valid,
         _valid: valid,
@@ -104,6 +111,10 @@ export default function AdminImportWritingOverlay({
               <TableRow>
                 <TableCell />
                 <TableCell>Task</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>Source</TableCell>
                 <TableCell>Question</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Valid</TableCell>
@@ -130,6 +141,14 @@ export default function AdminImportWritingOverlay({
                   </TableCell>
 
                   <TableCell>{row.taskType}</TableCell>
+
+                  <TableCell>{row.title}</TableCell>
+
+                  <TableCell>{row.type}</TableCell>
+
+                  <TableCell>{row.category}</TableCell>
+
+                  <TableCell>{row.source}</TableCell>
 
                   <TableCell>{row.question?.slice(0, 80)}</TableCell>
 

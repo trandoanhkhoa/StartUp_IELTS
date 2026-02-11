@@ -49,8 +49,16 @@ export const navigation = [
     name: "Writing",
     icon: <MenuBookRoundedIcon />,
     children: [
-      { name: "Nộp Task 1", href: "/task1", icon: <EditNoteRoundedIcon /> },
-      { name: "Nộp Task 2", href: "/task2", icon: <DescriptionRoundedIcon /> },
+      {
+        name: "Danh sách Topic",
+        href: "/writing",
+        icon: <EditNoteRoundedIcon />,
+      },
+      {
+        name: "Topic của bạn",
+        href: "/writingtest",
+        icon: <DescriptionRoundedIcon />,
+      },
       { name: "Lịch sử", href: "/history", icon: <HistoryRoundedIcon /> },
     ],
   },
@@ -101,6 +109,9 @@ function BandChip({ band = 0 }) {
 
 export default function AppLayout({ children }) {
   const { profile, signOut, isAdmin } = useAuth();
+  const [openDocs, setOpenDocs] = useState(true);
+  const isChildActive = (children) =>
+    children?.some((c) => location.pathname === c.href);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -200,154 +211,155 @@ export default function AppLayout({ children }) {
         </Typography>
 
         <List disablePadding sx={{ display: "grid", gap: 0.5 }}>
-          {/* Dashboard */}
-          <NavItem
-            name="Dashboard"
-            href="/dashboard"
-            icon={<DashboardRoundedIcon />}
-            active={isActivePath("/dashboard")}
-            setMobileOpen={setMobileOpen}
-          />
+          {navigation.map((item) => {
+            const active = location.pathname === item.href;
+            const childActive = isChildActive(item.children);
 
-          {/* WRITING GROUP */}
-          <Box>
-            <ListItemButton
-              onClick={() => setOpenWriting((v) => !v)}
-              sx={{
-                borderRadius: 3,
-                px: 1.5,
-                py: 1.2,
-                bgcolor: activeWriting
-                  ? "rgba(14,165,233,0.10)"
-                  : "transparent",
-                border: activeWriting
-                  ? "1px solid rgba(14,165,233,0.18)"
-                  : "1px solid transparent",
-                "&:hover": {
-                  bgcolor: activeWriting
-                    ? "rgba(14,165,233,0.12)"
-                    : "rgba(15,23,42,0.04)",
-                },
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 36,
-                  color: activeWriting ? "primary.main" : "text.secondary",
-                }}
-              >
-                <MenuBookRoundedIcon />
-              </ListItemIcon>
+            // ===== MENU CÓ CON =====
+            if (item.children) {
+              return (
+                <Box key={item.name}>
+                  <ListItemButton
+                    onClick={() => setOpenDocs(!openDocs)}
+                    sx={{
+                      borderRadius: 3,
+                      px: 1.5,
+                      py: 1.2,
+                      bgcolor: childActive
+                        ? "rgba(14,165,233,0.08)"
+                        : "transparent",
+                      "&:hover": {
+                        bgcolor: "rgba(15,23,42,0.04)",
+                      },
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 36,
+                        color: childActive ? "primary.main" : "text.secondary",
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
 
-              <ListItemText
-                primary="Writing"
-                primaryTypographyProps={{
-                  fontSize: 14,
-                  fontWeight: activeWriting ? 800 : 600,
-                }}
-              />
+                    <ListItemText
+                      primary={item.name}
+                      primaryTypographyProps={{
+                        fontSize: 14,
+                        fontWeight: childActive ? 800 : 600,
+                      }}
+                    />
 
-              {openWriting ? (
-                <ExpandLessRoundedIcon fontSize="small" />
-              ) : (
-                <ExpandMoreRoundedIcon fontSize="small" />
-              )}
-            </ListItemButton>
+                    <Box
+                      sx={{
+                        transform: openDocs ? "rotate(90deg)" : "rotate(0deg)",
+                        transition: "transform .15s ease",
+                        color: "text.secondary",
+                      }}
+                    >
+                      ▶
+                    </Box>
+                  </ListItemButton>
 
-            <Collapse in={openWriting} timeout={200} unmountOnExit>
-              <List disablePadding sx={{ pt: 0.5, display: "grid", gap: 0.5 }}>
-                <NavChildItem
-                  name="Nộp Task 1"
-                  href="/task1"
-                  icon={<EditNoteRoundedIcon />}
-                  active={isActivePath("/task1")}
-                  setMobileOpen={setMobileOpen}
-                />
-                <NavChildItem
-                  name="Nộp Task 2"
-                  href="/task2"
-                  icon={<DescriptionRoundedIcon />}
-                  active={isActivePath("/task2")}
-                  setMobileOpen={setMobileOpen}
-                />
-                <NavChildItem
-                  name="Lịch sử"
-                  href="/history"
-                  icon={<HistoryRoundedIcon />}
-                  active={isActivePath("/history")}
-                  setMobileOpen={setMobileOpen}
-                />
-              </List>
-            </Collapse>
-          </Box>
+                  {/* ===== MENU CON ===== */}
+                  <Collapse in={openDocs} timeout="auto" unmountOnExit>
+                    <List disablePadding sx={{ pl: 2, mt: 0.5 }}>
+                      {item.children.map((child) => {
+                        const activeChild = location.pathname === child.href;
 
-          {/* Other */}
-          <NavItem
-            name="Reading"
-            href="/reading"
-            icon={<AutoStoriesIcon />}
-            active={isActivePath("/reading")}
-            setMobileOpen={setMobileOpen}
-          />
-          <NavItem
-            name="Listening"
-            href="/listening"
-            icon={<HeadphonesIcon />}
-            active={isActivePath("/listening")}
-            setMobileOpen={setMobileOpen}
-          />
-          <NavItem
-            name="Từ vựng"
-            href="/vocabulary"
-            icon={<BookmarksIcon />}
-            active={isActivePath("/vocabulary")}
-            setMobileOpen={setMobileOpen}
-          />
-        </List>
+                        return (
+                          <ListItemButton
+                            key={child.href}
+                            component={Link}
+                            to={child.href}
+                            onClick={() => setMobileOpen(false)}
+                            sx={{
+                              borderRadius: 2.5,
+                              px: 1.5,
+                              py: 1,
+                              mb: 0.5,
+                              bgcolor: activeChild
+                                ? "rgba(14,165,233,0.10)"
+                                : "transparent",
+                              border: activeChild
+                                ? "1px solid rgba(14,165,233,0.18)"
+                                : "1px solid transparent",
+                              "&:hover": {
+                                bgcolor: activeChild
+                                  ? "rgba(14,165,233,0.12)"
+                                  : "rgba(15,23,42,0.04)",
+                              },
+                            }}
+                          >
+                            <ListItemIcon
+                              sx={{
+                                minWidth: 32,
+                                color: activeChild
+                                  ? "primary.main"
+                                  : "text.secondary",
+                              }}
+                            >
+                              {child.icon}
+                            </ListItemIcon>
 
-        {isAdmin && (
-          <>
-            <Typography
-              sx={{
-                px: 1.5,
-                pt: 3,
-                pb: 1,
-                fontSize: 11,
-                fontWeight: 800,
-                letterSpacing: 0.8,
-                color: "text.secondary",
-              }}
-            >
-              ADMIN
-            </Typography>
+                            <ListItemText
+                              primary={child.name}
+                              primaryTypographyProps={{
+                                fontSize: 13,
+                                fontWeight: activeChild ? 700 : 500,
+                              }}
+                            />
+                          </ListItemButton>
+                        );
+                      })}
+                    </List>
+                  </Collapse>
+                </Box>
+              );
+            }
 
-            <List disablePadding>
+            // ===== MENU THƯỜNG =====
+            return (
               <ListItemButton
+                key={item.href}
                 component={Link}
-                to="/admin"
+                to={item.href}
                 onClick={() => setMobileOpen(false)}
                 sx={{
                   borderRadius: 3,
                   px: 1.5,
                   py: 1.2,
-                  bgcolor:
-                    location.pathname === "/admin"
-                      ? "rgba(14,165,233,0.10)"
-                      : "transparent",
-                  "&:hover": { bgcolor: "rgba(15,23,42,0.04)" },
+                  bgcolor: active ? "rgba(14,165,233,0.10)" : "transparent",
+                  border: active
+                    ? "1px solid rgba(14,165,233,0.18)"
+                    : "1px solid transparent",
+                  "&:hover": {
+                    bgcolor: active
+                      ? "rgba(14,165,233,0.12)"
+                      : "rgba(15,23,42,0.04)",
+                  },
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 36, color: "text.secondary" }}>
-                  <AdminPanelSettingsRoundedIcon />
+                <ListItemIcon
+                  sx={{
+                    minWidth: 36,
+                    color: active ? "primary.main" : "text.secondary",
+                  }}
+                >
+                  {item.icon}
                 </ListItemIcon>
+
                 <ListItemText
-                  primary="Quản lý"
-                  primaryTypographyProps={{ fontSize: 14, fontWeight: 700 }}
+                  primary={item.name}
+                  primaryTypographyProps={{
+                    fontSize: 14,
+                    fontWeight: active ? 800 : 600,
+                  }}
                 />
               </ListItemButton>
-            </List>
-          </>
-        )}
+            );
+          })}
+        </List>
       </Box>
 
       {/* User Card */}
@@ -416,10 +428,10 @@ export default function AppLayout({ children }) {
             <Typography fontSize={12} color="text.secondary" fontWeight={700}>
               IELTS Writing
             </Typography>
-            <Typography fontSize={14} fontWeight={900} noWrap>
+            {/* <Typography fontSize={14} fontWeight={900} noWrap>
               {navigation.find((n) => n.href === location.pathname)?.name ||
                 (location.pathname === "/admin" ? "Quản lý" : "Trang")}
-            </Typography>
+            </Typography> */}
           </Box>
 
           <Stack direction="row" alignItems="center" spacing={1.5}>

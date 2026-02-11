@@ -50,7 +50,7 @@
 + Chức năng học từ vựng
     - Trang reading
         + Hiển thị danh sách bài reading bao gồm (tên bài, số lượng làm, image, loại câu hỏi) - ghi chú mỗi hàng chỉ tầm 5 bài reading
-        + Hiển thị bộ lọc bao gồm (dạng bài theo passage1,2,3 hoặc theo nguồn, hoặc theo dạng câu hỏi)
+        + Hiển thị bộ lọc bao gồm (dạng bài theo passage 1,2,3 hoặc theo nguồn, hoặc theo dạng câu hỏi)
         + Hiển thị khu vực bình luận
     - Trang làm bài reading: bên phải hiển thị đoạn văn, bên trái hiển thị câu hỏi, phía trên hiển thị thời gian
         + Hiển thị nút nộp bài
@@ -60,5 +60,166 @@
     - Trang làm bài listening: hiển thị các dạng câu hỏi, bên dưới hiển thị audio có điều chỉnh âm lượng, tốc độ, tua ngược 5s, tua xuôi 5s
         + Hiển thị các công cụ hỗ trợ như note, nút hightlight, hoặc tra từ vựng
 
+- Writing chấm điểm tự động
+    + Hiển thị band điểm tổng và (TR, CC, LR, GRA)
+    + Mô tả chi tiết bao gồm 3-5 câu cho 
+    (TR: Task Response,CC: Coherence & Cohesion, LR: Lexical Resource, Grammatical Range & Accuracy)
+    + TR: Task Response
+        + Mô tả tổng quan từ 3-5 câu.
+        + Đưa ra kết quả dưới dạng JSON [tr: điểm, detail: [clarityOfPosition: điểm, depthOfIdeas: điểm, appropriatenessOfFormat: điểm,relevant&SpecificExamples: điểm,appropriateWordCount: điểm]]
+    + CC: Coherence & Cohesion
+        + Mô tả tổng quan từ 3-5 câu.
+        + Đưa ra kết quả dưới dạng JSON [cc: điểm, detail:[LogicalOrganization: điểm, EffectiveIntroduction&Conclusion:điểm, SupportedMainPoints: điểm,CohesiveDevicesUsage: điểm,Paragraphing:điểm]]
+    + GRA: Grammatical Range & Accuracy
+        + Mô tả tổng quan từ 3-5 câu.
+        + Đưa ra kết quả dưới dạng JSON [gra: điểm, detail:[SentenceStructureVariety: điểm,GrammarAccuracy: điểm, PunctuationUsage: điểm]]
+    + LR: Lexical Resource(LR)
+        + Mô tả tổng quan từ 3-5 câu.
+        + Đưa ra kết quả dưới dạng JSON [lr: điểm, detail:[VocabularyRange: điểm,LexicalAccuracy:điêm, SpellingAndWordFormation:điểm]]
+    
+    Danh sách các lỗi sai và sửa lại cho đúng theo dạng JSON correct:[[lỗi sai, từ sửa lại, giải thích],...]
+    Danh sách nâng cấp cấu trúc theo dạng JSON structure:[[cấu trúc hiện tại, cấu trúc nâng cấp],...]
+    Danh sách từ vựng liên quan chủ đề vocab: [[từ vựng, loại từ, phát âm, nghĩa], ...]
+    Button: Xem bài mẫu writing band 6.5 - 7.0, 7.0 - 8.0
 
+
+$@"
+You are a certified IELTS Examiner.
+
+Task Type: {data.taskType}
+
+Question:
+{data.taskquestion}
+
+Candidate's Essay:
+{data.taskcontent}
+
+You must evaluate this essay strictly according to official IELTS Writing Band Descriptors.
+
+LANGUAGE REQUIREMENT (VERY IMPORTANT):
+- All descriptions, explanations, and evaluations MUST be written in Vietnamese.
+- Use formal academic Vietnamese.
+- Do NOT mix English and Vietnamese (except extracted original phrases from essay).
+- Band scores remain numeric.
+
+CRITICAL INSTRUCTIONS:
+- Return ONLY valid JSON.
+- No markdown.
+- No backticks.
+- No comments.
+- No explanation outside JSON.
+- If something does not exist, return empty array [].
+- Never fabricate errors.
+
+SCORING RULES:
+- Band range: 0 - 9
+- Use 0.5 increments only (e.g., 6.0, 6.5, 7.0)
+- overall = average of TR, CC, LR, GRA (rounded to nearest 0.5)
+
+SEVERITY LEVEL DEFINITION:
+- red = lỗi nghiêm trọng ảnh hưởng lớn đến band điểm
+- medium = lỗi trung bình ảnh hưởng đến độ rõ ràng hoặc chính xác
+- lightblue = lỗi nhỏ, ảnh hưởng hạn chế
+
+JSON STRUCTURE REQUIRED:
+
+{{
+  ""overall"": number,
+  ""tr"": number,
+  ""cc"": number,
+  ""lr"": number,
+  ""gra"": number,
+
+  ""trDetail"": {{
+    ""description"": ""3-5 câu nhận xét học thuật bằng tiếng Việt về Task Response."",
+    ""json"": {{
+      ""tr"": number,
+      ""detail"": {{
+        ""clarityOfPosition"": number,
+        ""depthOfIdeas"": number,
+        ""appropriatenessOfFormat"": number,
+        ""relevantSpecificExamples"": number,
+        ""appropriateWordCount"": number
+      }}
+    }},
+    ""correct"": [
+      [
+        ""cụm từ sai được trích nguyên văn từ bài viết"",
+        ""phiên bản sửa học thuật"",
+        ""giải thích học thuật 3-5 câu bằng tiếng Việt"",
+        ""red | medium | lightblue""
+      ]
+    ]
+  }},
+
+  ""ccDetail"": {{
+    ""description"": ""3-5 câu nhận xét học thuật bằng tiếng Việt về Coherence & Cohesion."",
+    ""json"": {{
+      ""cc"": number,
+      ""detail"": {{
+        ""LogicalOrganization"": number,
+        ""EffectiveIntroductionConclusion"": number,
+        ""SupportedMainPoints"": number,
+        ""CohesiveDevicesUsage"": number,
+        ""Paragraphing"": number
+      }}
+    }},
+    ""correct"": [
+      [
+        ""vấn đề liên kết hoặc tổ chức đoạn văn"",
+        ""phiên bản cải thiện"",
+        ""giải thích 3-5 câu bằng tiếng Việt về vấn đề coherence"",
+        ""red | medium | lightblue""
+      ]
+    ]
+  }},
+
+  ""lrDetail"": {{
+    ""description"": ""3-5 câu nhận xét học thuật bằng tiếng Việt về Lexical Resource."",
+    ""json"": {{
+      ""lr"": number,
+      ""detail"": {{
+        ""VocabularyRange"": number,
+        ""LexicalAccuracy"": number,
+        ""SpellingAndWordFormation"": number
+      }}
+    }},
+    ""correct"": [
+      [
+        ""từ hoặc cụm từ dùng sai"",
+        ""từ thay thế chính xác hơn hoặc nâng cao hơn"",
+        ""giải thích 3-5 câu bằng tiếng Việt tập trung vào độ chính xác từ vựng hoặc collocation"",
+        ""red | medium | lightblue""
+      ]
+    ]
+  }},
+
+  ""graDetail"": {{
+    ""description"": ""3-5 câu nhận xét học thuật bằng tiếng Việt về Grammatical Range & Accuracy."",
+    ""json"": {{
+      ""gra"": number,
+      ""detail"": {{
+        ""SentenceStructureVariety"": number,
+        ""GrammarAccuracy"": number,
+        ""PunctuationUsage"": number
+      }}
+    }},
+    ""correct"": [
+      [
+        ""lỗi ngữ pháp trích từ bài"",
+        ""phiên bản sửa đúng"",
+        ""giải thích quy tắc ngữ pháp 3-5 câu bằng tiếng Việt"",
+        ""red | medium | lightblue""
+      ]
+    ]
+  }},
+}}
+
+VALIDATION RULES:
+- Chỉ trích lỗi thực sự tồn tại trong bài.
+- Không được tự tạo lỗi nếu bài không có.
+- Nếu không có lỗi ở tiêu chí nào, trả về ""correct"": [].
+- Mọi phần mô tả và giải thích phải viết hoàn toàn bằng tiếng Việt.
+- Output phải là JSON hợp lệ có thể parse được.
+";
 

@@ -23,10 +23,48 @@ export default function AdminAddWritingOverlay({
   onSuccess = () => {},
   onError = () => {},
 }) {
+  const task1Types = [
+    "Line Chart",
+    "Bar Chart",
+    "Pie Chart",
+    "Table",
+    "Mixed Graph",
+    "Map",
+    "Process",
+  ];
+
+  const task2Types = [
+    "Agree or Disagree",
+    "Advantages and Disadvantages",
+    "Discussion",
+    "Causes Problems and Solutions",
+    "Part Question",
+  ];
+  const categories = [
+    "Education",
+    "Environment",
+    "Health",
+    "Family",
+    "Travel",
+    "Technology",
+    "Sports",
+    "Music",
+    "Characteristics",
+    "Weather",
+    "Career",
+    "Study & Work",
+    "Crime & Punishment",
+    "Food & Drink",
+    "Transportation",
+  ];
   const [form, setForm] = useState({
     taskType: "",
     imageUrl: "",
     question: "",
+    title: "",
+    type: "",
+    source: "",
+    category: "",
     hide: false,
   });
 
@@ -130,7 +168,65 @@ export default function AdminAddWritingOverlay({
               <MenuItem value="Task 2">Task 2</MenuItem>
             </TextField>
 
-            {/* Image */}
+            {/* NEW: Title */}
+            <TextField
+              label="Title"
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              fullWidth
+              placeholder="Enter short title..."
+            />
+
+            {/* NEW: Type (dynamic theo Task) */}
+            {form.taskType && (
+              <TextField
+                select
+                label="Question type"
+                name="type"
+                value={form.type}
+                onChange={handleChange}
+                fullWidth
+              >
+                {(form.taskType === "Task 1" ? task1Types : task2Types).map(
+                  (item) => (
+                    <MenuItem key={item} value={item}>
+                      {item}
+                    </MenuItem>
+                  ),
+                )}
+              </TextField>
+            )}
+            {/* Category */}
+            <TextField
+              select
+              label="Category"
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+              fullWidth
+            >
+              {categories.map((item) => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </TextField>
+
+            {/* NEW: Source */}
+            <TextField
+              select
+              label="Source"
+              name="source"
+              value={form.source}
+              onChange={handleChange}
+              fullWidth
+            >
+              <MenuItem value="Cambridge">Cambridge</MenuItem>
+              <MenuItem value="IELTS Collection">IELTS Collection</MenuItem>
+            </TextField>
+
+            {/* ===== Giữ nguyên Image phần của bạn ===== */}
             <Box>
               <Typography variant="body2" sx={{ mb: 1 }} color="text.secondary">
                 Image (optional)
