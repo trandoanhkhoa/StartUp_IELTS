@@ -69,6 +69,13 @@ export default function Dashboard() {
   useEffect(() => {
     setTimeout(() => setLoading(false), 600); // fake loading
   }, []);
+  // useEffect(() => {
+  //   const checkRole = async () => {
+  //     const res = await userApi.checkRole();
+  //     console.log(res.data);
+  //   };
+  //   checkRole();
+  // }, []);
 
   return (
     <Fade in timeout={600}>

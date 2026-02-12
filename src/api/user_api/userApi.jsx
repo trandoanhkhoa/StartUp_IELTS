@@ -17,6 +17,10 @@ const userApi = {
   getUpgradeWriting: (data) => {
     return axios.post("/writing/upgradewriting", data);
   },
+  // checkRole: () => {
+  //   return axios.get("/auth/check-role");
+  // },
+
   // Writing Mangagement
 };
 

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/api/AuthContext.jsx";
+import { GoogleLogin } from "@react-oauth/google";
 
 import {
   Alert,
@@ -43,7 +44,7 @@ function FadeIn({ children }) {
 }
 
 export default function LoginPage() {
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -338,7 +339,51 @@ export default function LoginPage() {
                       hoặc
                     </Typography>
                   </Divider>
+                  {/* <Button
+                    onClick={() =>
+                      (window.location.href =
+                        "https://localhost:5001/auth/login")
+                    }
+                    variant="outlined"
+                    size="large"
+                    fullWidth
+                    sx={{
+                      borderRadius: 4,
+                      py: 1.2,
+                      fontWeight: 800,
+                      textTransform: "none",
+                      borderColor: "rgba(15,23,42,0.15)",
+                      bgcolor: "#fff",
+                      color: "#111",
+                      "&:hover": {
+                        bgcolor: "#f8f9fa",
+                        borderColor: "rgba(15,23,42,0.25)",
+                      },
+                    }}
+                    startIcon={
+                      <Box
+                        component="img"
+                        src="https://developers.google.com/identity/images/g-logo.png"
+                        alt="Google"
+                        sx={{ width: 20, height: 20 }}
+                      />
+                    }
+                  >
+                    Đăng nhập với Google
+                  </Button> */}
+                  <GoogleLogin
+                    onSuccess={async (credentialResponse) => {
+                      const idToken = credentialResponse.credential;
+                      const res = await signInWithGoogle(idToken);
 
+                      if (res.status) {
+                        navigate("/dashboard", { replace: true });
+                      }
+                    }}
+                    onError={() => {
+                      setError("Google login thất bại");
+                    }}
+                  />
                   <Button
                     component={Link}
                     to="/register"

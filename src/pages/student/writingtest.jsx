@@ -427,7 +427,6 @@ export default function SubmitTask1() {
                                 label="Nâng cấp bài (Coming soon)"
                               />
                             </Tabs>
-
                             {/* ================= TAB 1 ================= */}
                             {tab === 0 && (
                               <Box p={3}>

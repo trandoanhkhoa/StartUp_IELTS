@@ -29,6 +29,7 @@ function App() {
         })}
 
         {/* PRIVATE */}
+
         <Route element={<PrivateRoute />}>
           {privateRoutes.map((route, idx) => {
             const Page = route.component;
@@ -38,13 +39,17 @@ function App() {
             return (
               <Route
                 key={`pri-${idx}`}
-                path={route.path}
-                element={
-                  <Layout>
-                    <Page />
-                  </Layout>
-                }
-              />
+                element={<PrivateRoute allowedRoles={route.roles} />}
+              >
+                <Route
+                  path={route.path}
+                  element={
+                    <Layout>
+                      <Page />
+                    </Layout>
+                  }
+                />
+              </Route>
             );
           })}
         </Route>

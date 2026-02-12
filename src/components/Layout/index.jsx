@@ -68,7 +68,11 @@ export const navigation = [
   { name: "Từ vựng", href: "/vocabulary", icon: <BookmarksIcon /> },
 ];
 
-function getInitials(name, email) {
+function getInitials(name, avatar) {
+  // Nếu có avatar → ưu tiên avatar
+  if (avatar) return avatar;
+
+  // Nếu có tên → tạo initials
   if (name?.trim()) {
     return name
       .trim()
@@ -78,7 +82,8 @@ function getInitials(name, email) {
       .toUpperCase()
       .slice(0, 2);
   }
-  return (email || "U").slice(0, 2).toUpperCase();
+
+  return "U";
 }
 
 function BandChip({ band = 0 }) {
@@ -108,7 +113,8 @@ function BandChip({ band = 0 }) {
 }
 
 export default function AppLayout({ children }) {
-  const { profile, signOut, isAdmin } = useAuth();
+  const { signOut, isAdmin } = useAuth();
+  const profile = JSON.parse(localStorage.getItem("profile")) || null;
   const [openDocs, setOpenDocs] = useState(true);
   const isChildActive = (children) =>
     children?.some((c) => location.pathname === c.href);
@@ -123,8 +129,8 @@ export default function AppLayout({ children }) {
   const menuOpen = Boolean(anchorEl);
 
   const initials = useMemo(
-    () => getInitials(profile?.name, profile?.email),
-    [profile?.name, profile?.email],
+    () => getInitials(profile?.fullname, profile?.avatar),
+    [profile?.fullname, profile?.avatar],
   );
 
   const isActivePath = (href) => location.pathname === href;
@@ -377,6 +383,8 @@ export default function AppLayout({ children }) {
           }}
         >
           <Avatar
+            src={profile?.avatar || undefined}
+            alt={profile?.fullname || "User"}
             sx={{
               width: 40,
               height: 40,
@@ -385,7 +393,7 @@ export default function AppLayout({ children }) {
               fontWeight: 900,
             }}
           >
-            {initials}
+            {!profile?.avatar && initials}
           </Avatar>
 
           <Box sx={{ minWidth: 0, flex: 1 }}>
@@ -437,7 +445,7 @@ export default function AppLayout({ children }) {
           <Stack direction="row" alignItems="center" spacing={1.5}>
             <BandChip band={profile?.avgBand ?? 0} />
 
-            <Tooltip title="Tài khoản">
+            <Tooltip title={profile?.fullname || "Tài khoản"}>
               <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
                 <Badge
                   variant="dot"
@@ -446,6 +454,8 @@ export default function AppLayout({ children }) {
                   anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 >
                   <Avatar
+                    src={profile?.avatar || undefined}
+                    alt={profile?.fullname || "User"}
                     sx={{
                       width: 36,
                       height: 36,
@@ -454,7 +464,7 @@ export default function AppLayout({ children }) {
                       fontWeight: 900,
                     }}
                   >
-                    {initials}
+                    {!profile?.avatar && initials}
                   </Avatar>
                 </Badge>
               </IconButton>
@@ -475,7 +485,7 @@ export default function AppLayout({ children }) {
             >
               <Box sx={{ px: 2, py: 1.5 }}>
                 <Typography fontWeight={900} fontSize={13} noWrap>
-                  {profile?.name || "Người dùng"}
+                  {profile?.fullname || "Người dùng"}
                 </Typography>
                 <Typography fontSize={12} color="text.secondary" noWrap>
                   {profile?.email}
@@ -563,92 +573,5 @@ export default function AppLayout({ children }) {
         </Box>
       </Box>
     </Box>
-  );
-}
-/** item cấp 1 */
-function NavItem({ name, href, icon, active, setMobileOpen }) {
-  return (
-    <ListItemButton
-      component={Link}
-      to={href}
-      onClick={() => setMobileOpen?.(false)}
-      sx={{
-        borderRadius: 3,
-        px: 1.5,
-        py: 1.2,
-        bgcolor: active ? "rgba(14,165,233,0.10)" : "transparent",
-        border: active
-          ? "1px solid rgba(14,165,233,0.18)"
-          : "1px solid transparent",
-        "&:hover": {
-          bgcolor: active ? "rgba(14,165,233,0.12)" : "rgba(15,23,42,0.04)",
-        },
-      }}
-    >
-      <ListItemIcon
-        sx={{
-          minWidth: 36,
-          color: active ? "primary.main" : "text.secondary",
-        }}
-      >
-        {icon}
-      </ListItemIcon>
-      <ListItemText
-        primary={name}
-        primaryTypographyProps={{
-          fontSize: 14,
-          fontWeight: active ? 800 : 600,
-        }}
-      />
-    </ListItemButton>
-  );
-}
-
-/** item con (indent + line dọc) */
-function NavChildItem({ name, href, icon, active, setMobileOpen }) {
-  return (
-    <ListItemButton
-      component={Link}
-      to={href}
-      onClick={() => setMobileOpen?.(false)}
-      sx={{
-        borderRadius: 3,
-        px: 1.5,
-        py: 1.05,
-        ml: 1.25,
-        position: "relative",
-        "&:before": {
-          content: '""',
-          position: "absolute",
-          left: 14,
-          top: 10,
-          bottom: 10,
-          width: 2,
-          borderRadius: 99,
-          bgcolor: active ? "rgba(14,165,233,0.45)" : "rgba(15,23,42,0.08)",
-        },
-        bgcolor: active ? "rgba(14,165,233,0.10)" : "transparent",
-        "&:hover": {
-          bgcolor: active ? "rgba(14,165,233,0.12)" : "rgba(15,23,42,0.04)",
-        },
-      }}
-    >
-      <ListItemIcon
-        sx={{
-          minWidth: 36,
-          color: active ? "primary.main" : "text.secondary",
-        }}
-      >
-        {icon}
-      </ListItemIcon>
-
-      <ListItemText
-        primary={name}
-        primaryTypographyProps={{
-          fontSize: 13.5,
-          fontWeight: active ? 800 : 600,
-        }}
-      />
-    </ListItemButton>
   );
 }

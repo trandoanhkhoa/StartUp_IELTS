@@ -23,6 +23,7 @@ import {
   BoltRounded,
 } from "@mui/icons-material";
 import { useAuth } from "@/api/AuthContext.jsx";
+import { useEffect, useState } from "react";
 
 const features = [
   {
@@ -52,7 +53,7 @@ const stats = [
 ];
 
 export default function Landing() {
-  const { user } = useAuth();
+  const { profile } = useAuth();
 
   return (
     <Box bgcolor="background.default" minHeight="100vh">
@@ -84,7 +85,7 @@ export default function Landing() {
             </Stack>
 
             <Stack direction="row" spacing={1}>
-              {user ? (
+              {profile ? (
                 <Button
                   component={RouterLink}
                   to="/dashboard"
@@ -159,7 +160,7 @@ export default function Landing() {
                 size="large"
                 variant="contained"
                 component={RouterLink}
-                to={user ? "/dashboard" : "/register"}
+                to={profile ? "/dashboard" : "/register"}
                 endIcon={<ArrowForwardRounded />}
                 sx={{
                   px: 4,
@@ -169,21 +170,21 @@ export default function Landing() {
                   color: "#fff",
                 }}
               >
-                {user ? "Đến Dashboard" : "Bắt đầu chấm bài"}
+                {profile ? "Đến Dashboard" : "Bắt đầu chấm bài"}
               </Button>
 
               <Button
                 size="large"
                 variant="outlined"
                 component={RouterLink}
-                to="/login"
+                to={profile ? "/dashboard" : "/login"}
                 sx={{
                   px: 4,
                   py: 1.4,
                   textTransform: "none",
                 }}
               >
-                Đăng nhập
+                {profile ? "Đến Dashboard" : "Đăng nhập"}
               </Button>
             </Stack>
 
@@ -308,7 +309,7 @@ export default function Landing() {
               variant="contained"
               color="secondary"
               component={RouterLink}
-              to={user ? "/dashboard" : "/register"}
+              to={profile ? "/dashboard" : "/register"}
               endIcon={<ArrowForwardRounded />}
               sx={{
                 textTransform: "none",
@@ -317,7 +318,7 @@ export default function Landing() {
                 py: 1.3,
               }}
             >
-              {user ? "Đến Dashboard" : "Đăng ký miễn phí"}
+              {profile ? "Đến Dashboard" : "Đăng ký miễn phí"}
             </Button>
           </CardContent>
         </Card>

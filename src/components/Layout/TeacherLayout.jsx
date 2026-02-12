@@ -52,7 +52,11 @@ const navigation = [
   { name: "Học sinh", href: "/teacher-student", icon: <HistoryRoundedIcon /> },
 ];
 
-function getInitials(name, email) {
+function getInitials(name, avatar) {
+  // Nếu có avatar → ưu tiên avatar
+  if (avatar) return avatar;
+
+  // Nếu có tên → tạo initials
   if (name?.trim()) {
     return name
       .trim()
@@ -62,7 +66,8 @@ function getInitials(name, email) {
       .toUpperCase()
       .slice(0, 2);
   }
-  return (email || "U").slice(0, 2).toUpperCase();
+
+  return "U";
 }
 
 function BandChip({ band = 0 }) {
@@ -92,7 +97,8 @@ function BandChip({ band = 0 }) {
 }
 
 export default function AppLayout({ children }) {
-  const { profile, signOut, isAdmin } = useAuth();
+  const { signOut, isAdmin } = useAuth();
+  const profile = JSON.parse(localStorage.getItem("profile")) || null;
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -104,8 +110,8 @@ export default function AppLayout({ children }) {
   const menuOpen = Boolean(anchorEl);
 
   const initials = useMemo(
-    () => getInitials(profile?.name, profile?.email),
-    [profile?.name, profile?.email],
+    () => getInitials(profile?.fullname, profile?.avatar),
+    [profile?.fullname, profile?.avatar],
   );
 
   const handleSignOut = async () => {
@@ -282,6 +288,8 @@ export default function AppLayout({ children }) {
           }}
         >
           <Avatar
+            src={profile?.avatar || undefined}
+            alt={"GV"}
             sx={{
               width: 40,
               height: 40,
@@ -290,12 +298,12 @@ export default function AppLayout({ children }) {
               fontWeight: 900,
             }}
           >
-            {initials}
+            {!profile?.avatar && initials}
           </Avatar>
 
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography fontWeight={800} fontSize={13} noWrap>
-              {profile?.name || "Giáo viên"}
+              {profile?.fullname || "Giáo viên"}
             </Typography>
             <Typography fontSize={12} color="text.secondary" noWrap>
               {profile?.email}
@@ -340,9 +348,11 @@ export default function AppLayout({ children }) {
           </Box>
 
           <Stack direction="row" alignItems="center" spacing={1.5}>
-            <BandChip band={profile?.avgBand ?? 0} />
-
-            <Tooltip title="Tài khoản">
+            {/* <BandChip band={profile?.avgBand ?? 0} /> */}
+            <Typography fontSize={16} color="text.primary" fontWeight={700}>
+              Giáo viên
+            </Typography>
+            <Tooltip title={profile?.fullname || "Giáo viên"}>
               <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
                 <Badge
                   variant="dot"
@@ -351,6 +361,8 @@ export default function AppLayout({ children }) {
                   anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 >
                   <Avatar
+                    src={profile?.avatar || undefined}
+                    alt={"GV"}
                     sx={{
                       width: 36,
                       height: 36,
@@ -359,7 +371,7 @@ export default function AppLayout({ children }) {
                       fontWeight: 900,
                     }}
                   >
-                    {initials}
+                    {!profile?.avatar && initials}
                   </Avatar>
                 </Badge>
               </IconButton>
@@ -380,7 +392,7 @@ export default function AppLayout({ children }) {
             >
               <Box sx={{ px: 2, py: 1.5 }}>
                 <Typography fontWeight={900} fontSize={13} noWrap>
-                  {profile?.name || "Giáo viên"}
+                  {profile?.fullname || "Giáo viên"}
                 </Typography>
                 <Typography fontSize={12} color="text.secondary" noWrap>
                   {profile?.email}

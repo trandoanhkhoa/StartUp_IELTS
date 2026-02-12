@@ -32,6 +32,9 @@ import AdminSettings from "@/pages/admin/settings.jsx";
 import AdminWriting from "@/pages/admin/writings/index.jsx";
 import AdminAddWriting from "@/pages/admin/writings/addwriting.jsx";
 
+//PAGE403
+import page403 from "@/pages/general/page403.jsx";
+
 export const publicRoutes = [
   { path: "/", component: Home, layout: null },
   { path: "/login", component: Login, layout: null },
@@ -40,52 +43,94 @@ export const publicRoutes = [
   { path: "/listening", component: Listening, layout: Layout },
   { path: "/writing", component: Writing, layout: Layout },
   { path: "/type-of-test", component: TypeofTest, layout: null },
-  { path: "/admin-writing", component: AdminWriting, layout: AdminLayout },
-  {
-    path: "/admin-addwriting",
-    component: AdminAddWriting,
-    layout: AdminLayout,
-  },
+  { path: "/page403", component: page403, layout: null },
 ];
 //Routes need to login for accessing
 export const privateRoutes = [
-  { path: "/reading-test", component: ReadingTest, layout: null },
-  { path: "/listening-test", component: ListeningTest, layout: null },
   {
     path: "/admin-settings",
     component: AdminSettings,
     layout: AdminLayout,
+    roles: ["admin"],
   },
   {
     path: "/teacher-dashboard",
     component: TeacherDashBoard,
     layout: TeacherLayout,
+    roles: ["admin", "teacher"],
   },
-  { path: "/teacher-course", component: Courses, layout: TeacherLayout },
-  { path: "/teacher-class", component: Classes, layout: TeacherLayout },
-  { path: "/teacher-student", component: Students, layout: TeacherLayout },
+  {
+    path: "/teacher-course",
+    component: Courses,
+    layout: TeacherLayout,
+    roles: ["admin", "teacher"],
+  },
+  {
+    path: "/teacher-class",
+    component: Classes,
+    layout: TeacherLayout,
+    roles: ["admin", "teacher"],
+  },
+  {
+    path: "/teacher-student",
+    component: Students,
+    layout: TeacherLayout,
+    roles: ["admin", "teacher"],
+  },
 
-  { path: "/admin-dashboard", component: AdminDashBoard, layout: AdminLayout },
-  { path: "/admin-class", component: AdminClasses, layout: AdminLayout },
-  { path: "/admin-detailclass", component: DetailClass, layout: AdminLayout },
+  {
+    path: "/admin-dashboard",
+    component: AdminDashBoard,
+    layout: AdminLayout,
+    roles: ["admin"],
+  },
+  {
+    path: "/admin-class",
+    component: AdminClasses,
+    layout: AdminLayout,
+    roles: ["admin"],
+  },
+  {
+    path: "/admin-detailclass",
+    component: DetailClass,
+    layout: AdminLayout,
+    roles: ["admin"],
+  },
   {
     path: "/admin-detailteacher",
     component: DetailTeacher,
     layout: AdminLayout,
+    roles: ["admin"],
   },
   {
     path: "/admin-teachers",
     component: AdminTeachers,
     layout: AdminLayout,
+    roles: ["admin"],
   },
   {
     path: "/admin-students",
     component: AdminStudents,
     layout: AdminLayout,
+    roles: ["admin"],
+  },
+  {
+    path: "/admin-writing",
+    component: AdminWriting,
+    layout: AdminLayout,
+    roles: ["admin"],
+  },
+  {
+    path: "/admin-addwriting",
+    component: AdminAddWriting,
+    layout: AdminLayout,
+    roles: ["admin"],
   },
   { path: "/dashboard", component: StudentDashboard, layout: Layout },
   { path: "/writingtest/:id", component: WritingTest, layout: null },
   { path: "/writingtest", component: WritingTest, layout: null },
+  { path: "/reading-test", component: ReadingTest, layout: null },
+  { path: "/listening-test", component: ListeningTest, layout: null },
   { path: "/history", component: History, layout: Layout },
   { path: "/vocabulary", component: Vocabulary, layout: Layout },
 ];
